@@ -1,0 +1,23 @@
+commit b90c5048e9b740ce871ce259529ed406105fbd8a
+Author: Felicitas Pojtinger <felicitas@pojtinger.com>
+Date:   Thu Oct 20 03:15:11 2022 +0200
+
+    feat: Use ICS template
+
+commit 1f0143fd33909ac0db50a85c063939d252ade2e5
+Author: Felicitas Pojtinger <felicitas@pojtinger.com>
+Date:   Thu Oct 13 22:13:03 2022 +0200
+
+    feat: Add basic writeup for pre-submission
+
+commit c88fcc7ceb210043d5c009fed05cbf8df57c5fcb
+Author: Felicitas Pojtinger <felicitas@pojtinger.com>
+Date:   Thu Oct 13 21:22:55 2022 +0200
+
+    feat: Add writeup
+
+commit 2dda506cd027fa8e52cbf19ad060f8180c5f6b38
+Author: Felicitas Pojtinger <felicitas@pojtinger.com>
+Date:   Wed Oct 12 12:02:03 2022 +0200
+
+    Initial commit

