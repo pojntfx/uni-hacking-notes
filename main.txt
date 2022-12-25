@@ -414,7 +414,7 @@ can be found when downloading it from the browser):
 
     $ xdg-open "http://faculty.htb/mpdf/tmp/${ID}"
 
-This returns a PDF with the text “Hello, world!” MPDF has a file
+This returns a PDF with the text “Hello, world!”. MPDF has a file
 inclusion exploit (https://www.exploit-db.com/exploits/50995), so I was
 able to inject /etc/passwd into the generated PDF:
 
