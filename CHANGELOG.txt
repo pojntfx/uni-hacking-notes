@@ -1,3 +1,9 @@
+commit 2f260d0a4aa3b663dc9b05e57d8c3483aa3a29f7
+Author: Felicitas Pojtinger <felicitas@pojtinger.com>
+Date:   Wed Jan 18 01:02:45 2023 +0100
+
+    feat: Add speaker notes
+
 commit b90c5048e9b740ce871ce259529ed406105fbd8a
 Author: Felicitas Pojtinger <felicitas@pojtinger.com>
 Date:   Thu Oct 20 03:15:11 2022 +0200

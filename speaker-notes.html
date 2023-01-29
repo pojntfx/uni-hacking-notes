@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en-US" xml:lang="en-US">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <meta name="author" content="Felicitas Pojtinger (fp036" />
+  <meta name="author" content="Stuttgart Media University)" />
+  <meta name="dcterms.date" content="2023-01-16" />
+  <meta name="keywords" content="hdm-stuttgart, hacking" />
+  <title>Faculty Speaker Notes</title>
+  <style>
+    html {
+      line-height: 1.5;
+      font-family: Georgia, serif;
+      font-size: 20px;
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 1em;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    div.abstract {
+      margin: 2em 2em 2em 2em;
+      text-align: left;
+      font-size: 85%;
+    }
+    div.abstract-title {
+      font-weight: bold;
+      text-align: center;
+      padding: 0;
+      margin-bottom: 0.5em;
+    }
+    code {
+      font-family: Menlo, Monaco, 'Lucida Console', Consolas, monospace;
+      font-size: 85%;
+      margin: 0;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      background-color: #1a1a1a;
+      border: none;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    span.underline{text-decoration: underline;}
+    div.column{display: inline-block; vertical-align: top; width: 50%;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+  </style>
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">Faculty Speaker Notes</h1>
+<p class="subtitle">Hack the Box: Faculty Machine</p>
+<p class="author">Felicitas Pojtinger (fp036</p>
+<p class="author">Stuttgart Media University)</p>
+<p class="date">2023-01-16</p>
+<div class="abstract">
+<div class="abstract-title">Abstract</div>
+<h2 id="section" class="unnumbered unlisted"></h2>
+<p>Speaker notes for the Voluntary Hacking Report for Winter
+2022/2023.</p>
+</div>
+</header>
+<nav id="TOC" role="doc-toc">
+<ul>
+<li><a href="#vorwort"><span class="toc-section-number">1.1</span>
+Vorwort</a></li>
+<li><a href="#benötigte-fähigkeiten"><span class="toc-section-number">1.2</span> Benötigte Fähigkeiten</a></li>
+<li><a href="#überblick"><span class="toc-section-number">1.3</span>
+Überblick</a></li>
+<li><a href="#informationssammlung"><span class="toc-section-number">1.4</span> Informationssammlung</a></li>
+<li><a href="#nutzung"><span class="toc-section-number">1.5</span>
+Nutzung</a></li>
+<li><a href="#user-flag"><span class="toc-section-number">1.6</span>
+User-Flag</a></li>
+<li><a href="#root-flag"><span class="toc-section-number">1.7</span>
+Root-Flag</a></li>
+<li><a href="#zusammenfassung"><span class="toc-section-number">1.8</span> Zusammenfassung</a></li>
+</ul>
+</nav>
+<section id="vorwort" data-number="0.1">
+<h2 data-number="1.1"><span class="header-section-number">1.1</span>
+Vorwort</h2>
+<ul>
+<li>Faculty ist eine Linux-basierte Maschine, erstellt von dem
+HTB-Benutzer gbyolo.</li>
+<li>Ursprünglich veröffentlicht am 2. Juli 2022 und wird als
+mittelschwer eingestuft</li>
+<li>CTF-ähnliche Maschine aufgrund von benutzerdefinierter,
+zweckgebundener Software und Verwendung von selten verwendeten Tools für
+Hinweise</li>
+<li>Zweckgebundene Software wurde in PHP geschrieben</li>
+</ul>
+</section>
+<section id="benötigte-fähigkeiten" data-number="0.2">
+<h2 data-number="1.2"><span class="header-section-number">1.2</span>
+Benötigte Fähigkeiten</h2>
+<ul>
+<li>Um die User-Flag zu knacken, sind Kenntnisse in Linux, ein
+oberflächliches Verständnis von PHP, SQL-Injection und File Inclusion
+erforderlich.</li>
+<li>Sobald eine Shell erworben wurde, kann Remote Code Execution und der
+GNU Debugger dazu verwendet werden, um das Root-Flag zu erlangen.</li>
+</ul>
+</section>
+<section id="überblick" data-number="0.3">
+<h2 data-number="1.3"><span class="header-section-number">1.3</span>
+Überblick</h2>
+<ul>
+<li>Faculty bietet ein benutzerdefiniertes PHP-Fakultätsplanungssystem,
+das von Nginx auf Ubuntu bereitgestellt wird.</li>
+<li>Schwachstellen wurden durch Fuzzing mit ffuf gefunden, darunter eine
+SQL-Injection-Schwachstelle im Admin-Bereich.</li>
+<li>Mit sqlmap kann das Anmeldeformular umgangen werden, um Zugriff auf
+eine Fakultätsliste zu erhalten.</li>
+<li>Liste und andere Daten können als PDF heruntergeladen werden, wobei
+eine alte Version von mpdf mit einer Datei-Injection-Schwachstelle
+verwendet wird.</li>
+<li>Durch das Anzeigen eines Stack Traces des Servers kann das
+Verzeichnis des Quellcodes der App zugänglich gemacht werden, das eine
+Datei mit hartcodiertem Passwort und Benutzernamen enthält, die auch als
+SSH-Anmeldeinformationen verwendet werden.</li>
+<li>SSH-Zugang als Benutzer gbyolo ermöglicht es uns, eine
+Remote-Code-Ausführungsschwachstelle im meta-git-Paket auszunutzen, um
+auf Benutzer developer zu escalieren, indem wir den entsprechenden
+SSH-Privatschlüssel herunterladen.</li>
+<li>Das Root-Flag kann erlangt werden, indem eine vorinstallierte gdb
+verwendet wird, um sich an einen Prozess anzuschließen, der als Root
+ausgeführt wird und die Debug-Symbole aktiviert sind und die SUID-Bits
+von bash setzt, was es ermöglicht als root auszuführen.</li>
+</ul>
+</section>
+<section id="informationssammlung" data-number="0.4">
+<h2 data-number="1.4"><span class="header-section-number">1.4</span>
+Informationssammlung</h2>
+<ul>
+<li>Nmap wurde verwendet, um offene Dienste auf der Maschine zu
+identifizieren, einschließlich Port 80 (HTTP) und 22 (SSH)</li>
+<li>Der Hostname wurde in /etc/hosts hinzugefügt, um auf die Dienste
+zugreifen zu können</li>
+<li>Mit ffuf wurde die Maschine gefuzzt und der Endpunkt /admin als
+interessant identifiziert</li>
+</ul>
+</section>
+<section id="nutzung" data-number="0.5">
+<h2 data-number="1.5"><span class="header-section-number">1.5</span>
+Nutzung</h2>
+<ul>
+<li>Sqlmap wurde auf der Anmeldeseite der API verwendet, um nach
+SQL-Injection-Schwachstellen zu suchen</li>
+<li>Sqlmap wurde verwendet, um Spalten aufzulisten und Benutzer
+auszulesen, was einen Administrator-Benutzer und das entsprechende
+Passwort-Hash enthüllte</li>
+<li>Das Hash war nicht leicht zu knacken, selbst mit großen
+Passwort-Listen</li>
+<li>Die Datenbank wurde weiter ausgelesen und es konnten
+Fakultäts-ID-Nummern gefunden werden, die zum Anmelden im
+nicht-Admin-Bereich verwendet werden können.</li>
+<li>Der Netzwerkeinspektor enthüllte einen RPC-Endpunkt, der vom
+Frontend aufgerufen wurde, welcher beim Test mit SQLMap eine weitere
+SQL-Injection-Schwachstelle aufwies</li>
+<li>Die Schwachstelle wurde verwendet, um alle Tabellen abzufragen (mit
+UNION anstelle der zeitbasierten Methode)</li>
+<li>Die SQL-Injection-Schwachstelle ermöglicht es nicht, auf Dateien
+zuzugreifen</li>
+<li>Der Fuzzer von früher wurde erneut untersucht, was den Endpunkt
+/admin enthüllte</li>
+<li>Eine SQL-Injection-Schwachstelle wurde auf http://faculty.htb/admin
+mit ’ OR 1=1# als Benutzername oder Passwort verwendet, was die
+Ausdrucksbewertung immer auf wahr setzt</li>
+<li>Ein Endpunkt, der PDFs generiert wurde gefunden</li>
+<li>Das Analysieren der Anfrage zeigte, dass der Eingabe HTML in einem
+base64 und URL-codierten Format war</li>
+<li>Eine POST-Anfrage wurde an den Endpunkt mit cURL gesendet, was die
+ID des PDFs zurückgab</li>
+<li>MPDF hat einen File-Inclusion-Exploit, der verwendet wurde, um
+/etc/passwd in das generierte PDF einzufügen</li>
+<li>Gbyolo, Developer und Root wurden als nächste Ziele aufgrund des
+Inhalts der eingefügten Datei identifiziert</li>
+<li>Der Quellcode der Anwendung wurde durch das Weglassen von Parametern
+und das Anzeigen eines Stacktraces abgerufen, was dabei half, den
+Speicherort des Quellcodes zu finden</li>
+<li>Die enthaltene db_connect.php-Datei wurde untersucht, um nach
+DB-Anmeldeinformationen zu suchen</li>
+<li>Der DB-Verbindungs-Konstruktor wurde gefunden, der den Benutzer als
+sched und das Passwort als Co.met06aci.dly53ro.per enthüllte</li>
+<li>Es wurde überprüft, ob das Passwort für gbyolo, developer und root
+übereinstimmt</li>
+</ul>
+</section>
+<section id="user-flag" data-number="0.6">
+<h2 data-number="1.6"><span class="header-section-number">1.6</span>
+User-Flag</h2>
+<ul>
+<li>Das Passwort stimmte mit gbyolo überein</li>
+<li>Es gab eine mbox-Datei im Home-Verzeichnis</li>
+<li>Überprüfte, wie Sudo konfiguriert wurde, um nach
+Privilegienaufstiegen zu suchen</li>
+<li>In der Lage, meta-git als developer auszuführen</li>
+<li>meta-git hat eine RCE-Schwachstelle, die verwendet wurde, um den
+SSH-Schlüssel zu lesen</li>
+<li>Der SSH-Schlüssel wurde zur lokalen VM hinzugefügt und es war
+möglich, sich anzumelden</li>
+<li>War in der Lage, die user flag zu erhalten.</li>
+</ul>
+</section>
+<section id="root-flag" data-number="0.7">
+<h2 data-number="1.7"><span class="header-section-number">1.7</span>
+Root-Flag</h2>
+<ul>
+<li>Eine Kopie von gdb wurde im Benutzerverzeichnis gefunden, war jedoch
+im Besitz von developer</li>
+<li>/usr/bin/gdb war zugänglich und wurde verwendet, um die Kontrolle
+über einen der als Root ausgeführten Prozesse zu übernehmen (wählte
+Postfix)</li>
+<li>Versuchte durch Setzen der SUID-Bits zu escalieren, konnte jedoch
+aufgrund fehlender Debug-Symbole nicht</li>
+<li>GDB an einen als Root ausgeführten Prozess angehängt (mit python),
+um die SUID-Bits für bash zu setzen</li>
+<li>Nach dem Verlassen von GDB konnte bash als Root ausgeführt
+werden</li>
+<li>Das Untersuchen des Home-Verzeichnisses von Root enthüllte
+verdächtige Dateien, in denen die root flag gefunden wurde.</li>
+</ul>
+</section>
+<section id="zusammenfassung" data-number="0.8">
+<h2 data-number="1.8"><span class="header-section-number">1.8</span>
+Zusammenfassung</h2>
+<ul>
+<li>Die User-Flag wurde innerhalb von ungefähr 4 Tagen geknackt und die
+Root-Flag war trivial zu erreichen</li>
+<li>Das Medium-Ranking fühlte sich angemessen an, aber mehrere
+Sackgassen waren demotivierend</li>
+<li>Das erste Machine, die der Autor vollständig allein geknackt
+hat</li>
+<li>Weitere Informationen und den vollständigen Bericht finden Sie auf
+meinem GitHub!</li>
+</ul>
+</section>
+</body>
+</html>
