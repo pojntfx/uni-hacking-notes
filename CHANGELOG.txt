@@ -1,28 +1,28 @@
-commit 2f260d0a4aa3b663dc9b05e57d8c3483aa3a29f7
+commit da36dced3b1579e92bb8e318c0ba248ef108a72a
 Author: Felicitas Pojtinger <felicitas@pojtinger.com>
 Date:   Wed Jan 18 01:02:45 2023 +0100
 
     feat: Add speaker notes
 
-commit b90c5048e9b740ce871ce259529ed406105fbd8a
+commit 066a1c0ad3b61fa010234f246a59b584b69ce352
 Author: Felicitas Pojtinger <felicitas@pojtinger.com>
 Date:   Thu Oct 20 03:15:11 2022 +0200
 
     feat: Use ICS template
 
-commit 1f0143fd33909ac0db50a85c063939d252ade2e5
+commit c84e1fc0f64158aa8602ea43a0abde3879480426
 Author: Felicitas Pojtinger <felicitas@pojtinger.com>
 Date:   Thu Oct 13 22:13:03 2022 +0200
 
     feat: Add basic writeup for pre-submission
 
-commit c88fcc7ceb210043d5c009fed05cbf8df57c5fcb
+commit 74007fccf273d6d8bb0978328636cb16367998c7
 Author: Felicitas Pojtinger <felicitas@pojtinger.com>
 Date:   Thu Oct 13 21:22:55 2022 +0200
 
     feat: Add writeup
 
-commit 2dda506cd027fa8e52cbf19ad060f8180c5f6b38
+commit b02eee35227463e6c55a6448ed7d988f18c41319
 Author: Felicitas Pojtinger <felicitas@pojtinger.com>
 Date:   Wed Oct 12 12:02:03 2022 +0200
 
